@@ -37,6 +37,17 @@ describe("CivicVoice baseline API", () => {
     expect(response.body.feedback.message).toBe("Please add more benches.");
   });
 
+  it("accepts another feedback submission from the same fictional citizen", async () => {
+    const app = await testApp();
+    const feedback = { nric: "S0000001A", name: "Aisha Rahman" };
+
+    const firstResponse = await request(app).post("/api/feedback").send({ ...feedback, message: "Please add more benches." });
+    const secondResponse = await request(app).post("/api/feedback").send({ ...feedback, message: "The garden is lovely." });
+
+    expect(firstResponse.status).toBe(201);
+    expect(secondResponse.status).toBe(201);
+  });
+
   it("blocks the feedback list without the admin role header", async () => {
     const app = await testApp();
     const response = await request(app).get("/api/feedback");

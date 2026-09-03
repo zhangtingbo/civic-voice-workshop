@@ -19,6 +19,11 @@ export function CitizenPage({ user }) {
     }
   }
 
+  function startAnotherSubmission() {
+    setSubmitted(false);
+    setError("");
+  }
+
   return (
     <main className="page-shell">
       <div className="page-heading">
@@ -27,26 +32,33 @@ export function CitizenPage({ user }) {
         <p>Tell us about an issue, an idea, or a positive experience in your community.</p>
       </div>
       <section className="form-card">
-        {submitted && <div className="success-banner">Thank you. Your feedback has been received.</div>}
-        <form onSubmit={handleSubmit}>
-          <label>Your feedback
-            <textarea
-              rows="7"
-              value={message}
-              maxLength={FEEDBACK_MAX_LENGTH}
-              onChange={(event) => setMessage(limitFeedbackMessage(event.target.value))}
-              placeholder="Share your feedback here..."
-            />
-          </label>
-          <div className="form-footer">
-            <div>
-              <div className="muted">Please do not include sensitive personal information.</div>
-              <div className="character-count">{message.length} / {FEEDBACK_MAX_LENGTH} characters</div>
-            </div>
-            <button className="primary-button">Submit feedback</button>
+        {submitted ? (
+          <div className="success-panel">
+            <div className="success-banner">Thank you. Your feedback has been received.</div>
+            <p className="muted">You can share another issue, idea, or positive experience whenever you are ready.</p>
+            <button className="primary-button" type="button" onClick={startAnotherSubmission}>Submit another</button>
           </div>
-          {error && <p className="error-message">{error}</p>}
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <label>Your feedback
+              <textarea
+                rows="7"
+                value={message}
+                maxLength={FEEDBACK_MAX_LENGTH}
+                onChange={(event) => setMessage(limitFeedbackMessage(event.target.value))}
+                placeholder="Share your feedback here..."
+              />
+            </label>
+            <div className="form-footer">
+              <div>
+                <div className="muted">Please do not include sensitive personal information.</div>
+                <div className="character-count">{message.length} / {FEEDBACK_MAX_LENGTH} characters</div>
+              </div>
+              <button className="primary-button">Submit feedback</button>
+            </div>
+            {error && <p className="error-message">{error}</p>}
+          </form>
+        )}
       </section>
     </main>
   );
